@@ -11,24 +11,25 @@ using System.Collections.Generic;
 
 namespace Ejyle.DevAccelerate.MultiTenancy.Tenants
 {
-    public class DaTenant : DaTenant<string, DaTenantUser, DaTenantAttribute, DaMTPTenant, DaTenantDomain>
+    public class DaTenant : DaTenant<string, DaTenantUser, DaTenantAttribute, DaMSPTenant, DaMSPTenantMember, DaTenantDomain>
     {
         public DaTenant() : base()
         { }
     }
 
-    public class DaTenant<TKey, TTenantUser, TTenantAttribute, TMTPTenant, TTenantDomain> : DaAuditedEntityBase<TKey>, IDaTenant<TKey>
+    public class DaTenant<TKey, TTenantUser, TTenantAttribute, TMSPTenant, TMSPTenantMember, TTenantDomain> : DaAuditedEntityBase<TKey>, IDaTenant<TKey>
         where TKey : IEquatable<TKey>
         where TTenantUser : IDaTenantUser<TKey>
         where TTenantAttribute : IDaTenantAttribute<TKey>
-        where TMTPTenant : IDaMTPTenant<TKey>
+        where TMSPTenant : IDaMSPTenant<TKey>
+        where TMSPTenantMember : IDaMSPTenantMember<TKey>
         where TTenantDomain : IDaTenantDomain<TKey>
     {
         public DaTenant()
         {
             TenantUsers = new HashSet<TTenantUser>();
-            MTPManagedTenants = new HashSet<TMTPTenant>();
-            MTPTenants = new HashSet<TMTPTenant>();
+            MSPTenantMembers = new HashSet<TMSPTenantMember>();
+            MSPTenants = new HashSet<TMSPTenant>();
             Domains = new HashSet<TTenantDomain>();
         }
 
@@ -47,8 +48,7 @@ namespace Ejyle.DevAccelerate.MultiTenancy.Tenants
         public string DateFormat { get; set; }
         public string SystemLanguage { get; set; }
         public ICollection<TTenantDomain> Domains { get; set; }
-        public DaTenantMTPStatus MTPStatus { get; set; }
-        public virtual ICollection<TMTPTenant> MTPTenants { get; set; }
-        public virtual ICollection<TMTPTenant> MTPManagedTenants { get; set; }
+        public virtual ICollection<TMSPTenant> MSPTenants { get; set; }
+        public virtual ICollection<TMSPTenantMember> MSPTenantMembers { get; set; }
     }
 }

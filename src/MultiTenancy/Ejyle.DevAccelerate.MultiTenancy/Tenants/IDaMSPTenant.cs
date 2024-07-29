@@ -5,15 +5,15 @@
 // Licensed under the MIT license. See the LICENSE file in the project's root directory for complete license information.
 // ----------------------------------------------------------------------------------------------------------------------
 
-using Ejyle.DevAccelerate.Core;
 using System;
+using Ejyle.DevAccelerate.Core;
 
-namespace Ejyle.DevAccelerate.Social
+namespace Ejyle.DevAccelerate.MultiTenancy.Tenants
 {
-    public interface IDaPostTag<TKey> : IDaEntity<TKey>
+    public interface IDaMSPTenant<TKey> : IDaAuditedEntity<TKey>
         where TKey : IEquatable<TKey>
     {
-        TKey PostId { get; set; }
-        string Tag { get; set; }
+        TKey TenantId { get; set; }
+        int MSPNumber { get; set; }
     }
 }

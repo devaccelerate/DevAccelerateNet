@@ -21,8 +21,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ejyle.DevAccelerate.Identit
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ejyle.DevAccelerate.Identity.EF", "Identity\Ejyle.DevAccelerate.Identity.EF\Ejyle.DevAccelerate.Identity.EF.csproj", "{783AA7D5-5AAE-4BF0-96BD-D6EDE93D3CBA}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Facades", "Facades", "{767578DE-48DF-47B9-8122-7272E6DD0B13}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Mail", "Mail", "{CC90F300-6FAD-4C0D-93B5-989C31770C08}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ejyle.DevAccelerate.Mail", "Mail\Ejyle.DevAccelerate.Mail\Ejyle.DevAccelerate.Mail.csproj", "{EA0519DA-1CAF-486D-A0F3-367161917D9A}"
@@ -36,10 +34,6 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ejyle.DevAccelerate.Sms.Twilio", "Sms\Ejyle.DevAccelerate.Sms.Twilio\Ejyle.DevAccelerate.Sms.Twilio.csproj", "{728B61A3-64F6-432D-8794-8A881E109B9A}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ejyle.DevAccelerate.Sms.Textlocal", "Sms\Ejyle.DevAccelerate.Sms.Textlocal\Ejyle.DevAccelerate.Sms.Textlocal.csproj", "{F37B5CA4-A090-4BE3-BCD1-16D11DF1FE84}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{DBD6DE35-2DD0-419D-BB2A-0C9BB7704A08}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ejyle.DevAccelerate.Tools", "Tools\Ejyle.DevAccelerate.Tools\Ejyle.DevAccelerate.Tools.csproj", "{EA6E8F21-A912-4C6F-8EAB-8EC3A2F0B4E0}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SystemTasks", "SystemTasks", "{F42CFB9F-66A2-480D-ADDD-DD5AA1C4C404}"
 EndProject
@@ -85,19 +79,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ejyle.DevAccelerate.Platfor
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ejyle.DevAccelerate.Platform.EF", "Platform\Ejyle.DevAccelerate.Platform.EF\Ejyle.DevAccelerate.Platform.EF.csproj", "{40D64ED6-003D-4B33-BD24-FB83FE20E968}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ejyle.DevAccelerate.Facades", "Facades\Ejyle.DevAccelerate.Facades\Ejyle.DevAccelerate.Facades.csproj", "{6F59A918-2AE9-4C5A-83CF-F7854821C6DA}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Social", "Social", "{C31715AC-2C2E-4F0F-B046-C75C2D77A4BE}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ejyle.DevAccelerate.Social", "Social\Ejyle.DevAccelerate.Social\Ejyle.DevAccelerate.Social.csproj", "{DAA1835A-DA11-4C29-B5D2-23905300C92F}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ejyle.DevAccelerate.Social.EF", "Social\Ejyle.DevAccelerate.Social.EF\Ejyle.DevAccelerate.Social.EF.csproj", "{935D8460-0077-496F-8652-A41D366327B5}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ejyle.DevAccelerate.Notifications", "Notifications\Ejyle.DevAccelerate.Notifications\Ejyle.DevAccelerate.Notifications.csproj", "{80D834C2-7B91-43B3-8D55-7213CF89DB3F}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ejyle.DevAccelerate.Notifications.EF", "Notifications\Ejyle.DevAccelerate.Notifications.EF\Ejyle.DevAccelerate.Notifications.EF.csproj", "{C6DE7DED-6FD5-47A3-8CBA-6AFC1251B3F6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ejyle.DevAccelerate.Notifications.SendGrid", "Notifications\Ejyle.DevAccelerate.Notifications.SendGrid\Ejyle.DevAccelerate.Notifications.SendGrid.csproj", "{5037B418-A841-47B9-88A6-A9CCC1C5E75E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ejyle.DevAccelerate.Notifications.SendGrid", "Notifications\Ejyle.DevAccelerate.Notifications.SendGrid\Ejyle.DevAccelerate.Notifications.SendGrid.csproj", "{5037B418-A841-47B9-88A6-A9CCC1C5E75E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -149,10 +135,6 @@ Global
 		{F37B5CA4-A090-4BE3-BCD1-16D11DF1FE84}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F37B5CA4-A090-4BE3-BCD1-16D11DF1FE84}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F37B5CA4-A090-4BE3-BCD1-16D11DF1FE84}.Release|Any CPU.Build.0 = Release|Any CPU
-		{EA6E8F21-A912-4C6F-8EAB-8EC3A2F0B4E0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{EA6E8F21-A912-4C6F-8EAB-8EC3A2F0B4E0}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{EA6E8F21-A912-4C6F-8EAB-8EC3A2F0B4E0}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{EA6E8F21-A912-4C6F-8EAB-8EC3A2F0B4E0}.Release|Any CPU.Build.0 = Release|Any CPU
 		{81CAFC99-265C-41F1-979B-AEB77144D7D3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{81CAFC99-265C-41F1-979B-AEB77144D7D3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{81CAFC99-265C-41F1-979B-AEB77144D7D3}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -209,18 +191,6 @@ Global
 		{40D64ED6-003D-4B33-BD24-FB83FE20E968}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{40D64ED6-003D-4B33-BD24-FB83FE20E968}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{40D64ED6-003D-4B33-BD24-FB83FE20E968}.Release|Any CPU.Build.0 = Release|Any CPU
-		{6F59A918-2AE9-4C5A-83CF-F7854821C6DA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6F59A918-2AE9-4C5A-83CF-F7854821C6DA}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6F59A918-2AE9-4C5A-83CF-F7854821C6DA}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6F59A918-2AE9-4C5A-83CF-F7854821C6DA}.Release|Any CPU.Build.0 = Release|Any CPU
-		{DAA1835A-DA11-4C29-B5D2-23905300C92F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{DAA1835A-DA11-4C29-B5D2-23905300C92F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{DAA1835A-DA11-4C29-B5D2-23905300C92F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{DAA1835A-DA11-4C29-B5D2-23905300C92F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{935D8460-0077-496F-8652-A41D366327B5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{935D8460-0077-496F-8652-A41D366327B5}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{935D8460-0077-496F-8652-A41D366327B5}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{935D8460-0077-496F-8652-A41D366327B5}.Release|Any CPU.Build.0 = Release|Any CPU
 		{80D834C2-7B91-43B3-8D55-7213CF89DB3F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{80D834C2-7B91-43B3-8D55-7213CF89DB3F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{80D834C2-7B91-43B3-8D55-7213CF89DB3F}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -249,7 +219,6 @@ Global
 		{F853A721-D5A1-4BB0-ABF4-7F6C56BFAA0C} = {C09963BA-EAE9-4A98-A7A7-A909F664CB80}
 		{728B61A3-64F6-432D-8794-8A881E109B9A} = {C09963BA-EAE9-4A98-A7A7-A909F664CB80}
 		{F37B5CA4-A090-4BE3-BCD1-16D11DF1FE84} = {C09963BA-EAE9-4A98-A7A7-A909F664CB80}
-		{EA6E8F21-A912-4C6F-8EAB-8EC3A2F0B4E0} = {DBD6DE35-2DD0-419D-BB2A-0C9BB7704A08}
 		{81CAFC99-265C-41F1-979B-AEB77144D7D3} = {F42CFB9F-66A2-480D-ADDD-DD5AA1C4C404}
 		{D157F44E-AB15-4676-ADB6-C14BE0C680A2} = {F42CFB9F-66A2-480D-ADDD-DD5AA1C4C404}
 		{3F16D311-1FD9-4775-8EB8-95E4A51FE89D} = {28DCEF29-8F77-4974-B234-49A23A70BC24}
@@ -264,15 +233,12 @@ Global
 		{17504E96-0B19-4F96-A351-39615C0269A3} = {22010F7D-0E07-499B-B51B-C53D2F484569}
 		{7B441845-3EFA-4E7C-AF69-244A95CD89B4} = {55E5A516-0FC2-4A07-8967-00F7B3764B90}
 		{40D64ED6-003D-4B33-BD24-FB83FE20E968} = {55E5A516-0FC2-4A07-8967-00F7B3764B90}
-		{6F59A918-2AE9-4C5A-83CF-F7854821C6DA} = {767578DE-48DF-47B9-8122-7272E6DD0B13}
-		{DAA1835A-DA11-4C29-B5D2-23905300C92F} = {C31715AC-2C2E-4F0F-B046-C75C2D77A4BE}
-		{935D8460-0077-496F-8652-A41D366327B5} = {C31715AC-2C2E-4F0F-B046-C75C2D77A4BE}
 		{80D834C2-7B91-43B3-8D55-7213CF89DB3F} = {9CCC4EFE-3272-4D85-9430-BFA38AF76BEB}
 		{C6DE7DED-6FD5-47A3-8CBA-6AFC1251B3F6} = {9CCC4EFE-3272-4D85-9430-BFA38AF76BEB}
 		{5037B418-A841-47B9-88A6-A9CCC1C5E75E} = {9CCC4EFE-3272-4D85-9430-BFA38AF76BEB}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		EnterpriseLibraryConfigurationToolBinariesPathV6 = packages\EnterpriseLibrary.ExceptionHandling.6.0.1304.0\lib\NET45;packages\EnterpriseLibrary.Logging.6.0.1304.0\lib\NET45;packages\EnterpriseLibrary.Common.6.0.1304.0\lib\NET45
 		SolutionGuid = {831BB8D2-2AA2-4B38-BD2F-1C679795682C}
+		EnterpriseLibraryConfigurationToolBinariesPathV6 = packages\EnterpriseLibrary.ExceptionHandling.6.0.1304.0\lib\NET45;packages\EnterpriseLibrary.Logging.6.0.1304.0\lib\NET45;packages\EnterpriseLibrary.Common.6.0.1304.0\lib\NET45
 	EndGlobalSection
 EndGlobal

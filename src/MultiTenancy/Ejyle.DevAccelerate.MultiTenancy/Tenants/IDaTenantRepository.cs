@@ -19,23 +19,30 @@ namespace Ejyle.DevAccelerate.MultiTenancy.Tenants
     /// <typeparam name="TKey">The type of an entity key.</typeparam>
     /// <typeparam name="TTenant">The type of a tenant.</typeparam>
     /// <typeparam name="TTenantUser">The type of a tenant user.</typeparam>
-    public interface IDaTenantRepository<TKey, TTenant, TTenantUser, TMTPTenant> : IDaEntityRepository<TKey, TTenant>
+    public interface IDaTenantRepository<TKey, TTenant, TTenantUser, TMSPTenant, TMSPTenantMember> : IDaEntityRepository<TKey, TTenant>
         where TKey : IEquatable<TKey>
         where TTenant : IDaTenant<TKey>
         where TTenantUser : IDaTenantUser<TKey>
-        where TMTPTenant : IDaMTPTenant<TKey>
+        where TMSPTenant : IDaMSPTenant<TKey>
+        where TMSPTenantMember : IDaMSPTenantMember<TKey>
     {
+        IQueryable<TTenant> Tenants { get; }
+        IQueryable<TTenantUser> TenantUsers { get; }
+        IQueryable<TMSPTenant> MSPTenants { get; }
+        IQueryable<TMSPTenantMember> MSPTenantMembers { get; }
         Task CreateAsync(TTenant tenant);
-        Task CreateAsync(TTenant tenant, TKey mtpTenantId);
+        Task CreateAsync(TTenant tenant, TKey mspTenantId);
         Task UpdateAsync(TTenant tenant);
-        Task UpdateMTPTenantStatusAsync(TKey mtpTenantId, TKey tenantId, bool isActive);
         Task<TTenant> FindByIdAsync(TKey tenantId);
         Task<TTenant> FindByNameAsync(string name);
         Task<List<TTenant>> FindByUserIdAsync(TKey userId);
-        IQueryable<TTenant> Tenants { get; }
-        IQueryable<TTenantUser> TenantUsers { get; }
-        Task<TMTPTenant> FindMTPTenantIdAsync(TKey id);
         Task<bool> CheckTenantUserActiveAssociationAsync(TKey tenantId, TKey userId);
         Task<List<TTenant>> FindByAttributeAsync(string attributeName, string attributeValue);
+        Task CreateMSPTenantAsync(TMSPTenant mspTenant);
+        Task UpdateMSPTenantAsync(TMSPTenant mspTenant);
+        Task<TMSPTenant> FindMSPTenantByIdAsync(TKey mspTenatId);
+        Task CreateMSPTenantMemberAsync(TMSPTenantMember mspMember);
+        Task UpdateMSPTenantMemberAsync(TMSPTenantMember mspMember);
+        Task<TMSPTenantMember> FindMSPTenantMemberByIdAsync(TKey mspTenatMemberId);
     }
 }

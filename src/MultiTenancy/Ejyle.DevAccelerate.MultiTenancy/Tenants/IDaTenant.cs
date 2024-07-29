@@ -77,10 +77,5 @@ namespace Ejyle.DevAccelerate.MultiTenancy.Tenants
         /// Gets or sets the billing email of the tenant.
         /// </summary>
         string BillingEmail { get; set; }
-
-        /// <summary>
-        /// Gets or sets the MTP status of the tenant.
-        /// </summary>
-        DaTenantMTPStatus MTPStatus { get; set; }
     }
 }

@@ -16,18 +16,19 @@ using Ejyle.DevAccelerate.MultiTenancy.Tenants;
 
 namespace Ejyle.DevAccelerate.MultiTenancy.EF.Tenants
 {
-    public class DaTenantRepository : DaTenantRepository<string, DaTenant, DaTenantUser, DaTenantAttribute, DaMTPTenant, DaTenantDomain, DbContext>
+    public class DaTenantRepository : DaTenantRepository<string, DaTenant, DaTenantUser, DaTenantAttribute, DaMSPTenant, DaMSPTenantMember, DaTenantDomain, DbContext>
     {
         public DaTenantRepository(DbContext dbContext)
             : base(dbContext)
         { }
     }
 
-    public class DaTenantRepository<TKey, TTenant, TTenantUser, TTenantAttribute, TMTPTenant, TTenantDomain, TDbContext>
-         : DaEntityRepositoryBase<TKey, TTenant, DbContext>, IDaTenantRepository<TKey, TTenant, TTenantUser, TMTPTenant>
+    public class DaTenantRepository<TKey, TTenant, TTenantUser, TTenantAttribute, TMSPTenant, TMSPTenantMember, TTenantDomain, TDbContext>
+         : DaEntityRepositoryBase<TKey, TTenant, DbContext>, IDaTenantRepository<TKey, TTenant, TTenantUser, TMSPTenant, TMSPTenantMember>
         where TKey : IEquatable<TKey>
-        where TTenant : DaTenant<TKey, TTenantUser, TTenantAttribute, TMTPTenant, TTenantDomain>
-        where TMTPTenant : DaMTPTenant<TKey, TTenant>, new()
+        where TTenant : DaTenant<TKey, TTenantUser, TTenantAttribute, TMSPTenant, TMSPTenantMember, TTenantDomain>
+        where TMSPTenant : DaMSPTenant<TKey, TTenant, TMSPTenantMember>
+        where TMSPTenantMember : DaMSPTenantMember<TKey, TTenant, TMSPTenant>, new()
         where TTenantUser : DaTenantUser<TKey, TTenant>
         where TTenantAttribute : DaTenantAttribute<TKey, TTenant>
         where TTenantDomain : DaTenantDomain<TKey, TTenant>
@@ -36,11 +37,14 @@ namespace Ejyle.DevAccelerate.MultiTenancy.EF.Tenants
             : base(dbContext)
         { }
 
+        private DbSet<TMSPTenant> MSPTenantsSet { get { return DbContext.Set<TMSPTenant>(); } }
         private DbSet<TTenant> TenantsSet { get { return DbContext.Set<TTenant>(); } }
         private DbSet<TTenantUser> TenantUsersSet { get { return DbContext.Set<TTenantUser>(); } }
-        private DbSet<TMTPTenant> MTPTenantsSet { get { return DbContext.Set<TMTPTenant>(); } }
+        private DbSet<TMSPTenantMember> MSPTenantMembersSet { get { return DbContext.Set<TMSPTenantMember>(); } }
         public IQueryable<TTenant> Tenants => TenantsSet.AsQueryable();
         public IQueryable<TTenantUser> TenantUsers => TenantUsersSet.AsQueryable();
+        public IQueryable<TMSPTenant> MSPTenants => MSPTenantsSet.AsQueryable();
+        public IQueryable<TMSPTenantMember> MSPTenantMembers => MSPTenantMembersSet.AsQueryable();
 
         public Task CreateAsync(TTenant tenant)
         {
@@ -108,64 +112,68 @@ namespace Ejyle.DevAccelerate.MultiTenancy.EF.Tenants
                 .SingleOrDefaultAsync();
         }
 
-        public async Task CreateAsync(TTenant tenant, TKey mtpTenantId)
+        public async Task CreateAsync(TTenant tenant, TKey mspTenantId)
         {
-            tenant.MTPStatus = DaTenantMTPStatus.IsMTPManaged;
             TenantsSet.Add(tenant);
 
-            var mtpTenant = await TenantsSet.Where(m => m.Id.Equals(mtpTenantId)).SingleOrDefaultAsync();   
+            var mspTenant = await MSPTenantsSet.Where(m => m.Id.Equals(mspTenantId)).SingleOrDefaultAsync();   
 
-            if(mtpTenant == null)
+            if(mspTenant == null)
             {
-                throw new InvalidOperationException("MTPTenant not found.");
+                throw new InvalidOperationException("MSP tenant not found.");
             }
 
-            var mtpMember = new TMTPTenant()
+            TenantsSet.Add(tenant);
+
+            var mspTenantMember = new TMSPTenantMember()
             {
                 IsActive = true,
-                MTPManagedTenant = tenant,
-                MTPTenant = mtpTenant,
+                MSPTenantId = mspTenantId,
+                TenantId = tenant.Id,
+                Tenant = tenant,
+                MSPTenant = mspTenant,
                 CreatedBy = tenant.CreatedBy,
                 LastUpdatedBy = tenant.LastUpdatedBy,
                 CreatedDateUtc = tenant.CreatedDateUtc,
                 LastUpdatedDateUtc = tenant.LastUpdatedDateUtc
             };
 
-            MTPTenantsSet.Add(mtpMember);
+            MSPTenantMembersSet.Add(mspTenantMember);
             await SaveChangesAsync();
         }
 
-        public Task UpdateMTPTenantStatusAsync(TKey mtpTenantId, TKey tenantId, bool isActive)
+        public async Task CreateMSPTenantAsync(TMSPTenant mspTenant)
         {
-            var mtpTenant = MTPTenantsSet.Where(m => m.MTPTenantId.Equals(mtpTenantId) && m.MTPManagedTenantId.Equals(tenantId)).SingleOrDefault();
-
-            if (mtpTenant == null)
-            {
-                throw new InvalidOperationException("MTPTenant not found.");
-            }
-
-            mtpTenant.IsActive = isActive;
-            mtpTenant.LastUpdatedDateUtc = DateTime.UtcNow;
-
-            DbContext.Entry(mtpTenant).State = EntityState.Modified;
-            return SaveChangesAsync();
+            MSPTenantsSet.Add(mspTenant);
+            await SaveChangesAsync();
         }
 
-        public async Task<TMTPTenant> FindMTPTenantIdAsync(TKey id)
+        public async Task UpdateMSPTenantAsync(TMSPTenant mspTenant)
         {
-            var tenant = await TenantsSet.Where(m => m.Id.Equals(id)).SingleOrDefaultAsync();
-            
-            if(tenant == null)
-            {
-                throw new ArgumentException($"Invalid {nameof(id)} {id}");
-            }
+            MSPTenantsSet.Update(mspTenant);
+            await SaveChangesAsync();
+        }
 
-            if(tenant.MTPStatus != DaTenantMTPStatus.IsMTPManaged)
-            {
-                return null;
-            }
+        public Task<TMSPTenant> FindMSPTenantByIdAsync(TKey mspTenatId)
+        {
+            return MSPTenantsSet.Where(m => m.Id.Equals(mspTenatId)).SingleOrDefaultAsync();
+        }
 
-            return await MTPTenantsSet.Where(m => m.MTPManagedTenantId.Equals(tenant.Id)).SingleOrDefaultAsync();
+        public async Task CreateMSPTenantMemberAsync(TMSPTenantMember mspMember)
+        {
+            MSPTenantMembersSet.Add(mspMember);
+            await SaveChangesAsync();
+        }
+
+        public async Task UpdateMSPTenantMemberAsync(TMSPTenantMember mspMember)
+        {
+            MSPTenantMembersSet.Update(mspMember);
+            await SaveChangesAsync();
+        }
+
+        public Task<TMSPTenantMember> FindMSPTenantMemberByIdAsync(TKey mspTenatMemberId)
+        {
+            return MSPTenantMembersSet.Where(m => m.Id.Equals(mspTenatMemberId)).SingleOrDefaultAsync();    
         }
     }
 }

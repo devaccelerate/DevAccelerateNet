@@ -13,20 +13,21 @@ using System.Linq;
 
 namespace Ejyle.DevAccelerate.MultiTenancy.Tenants
 {
-    public class DaTenantManager<TKey, TTenant, TTenantUser, TMTPTenant>
+    public class DaTenantManager<TKey, TTenant, TTenantUser, TMSPTenant, TMSPTenantMember>
         : DaEntityManagerBase<TKey, TTenant>
         where TKey : IEquatable<TKey>
         where TTenant : IDaTenant<TKey>
         where TTenantUser : IDaTenantUser<TKey>
-        where TMTPTenant : IDaMTPTenant<TKey>
+        where TMSPTenant : IDaMSPTenant<TKey>
+        where TMSPTenantMember : IDaMSPTenantMember<TKey>
     {
-        public DaTenantManager(IDaTenantRepository<TKey, TTenant, TTenantUser, TMTPTenant> repository)
+        public DaTenantManager(IDaTenantRepository<TKey, TTenant, TTenantUser, TMSPTenant, TMSPTenantMember> repository)
             : base(repository)
         { }
 
-        private IDaTenantRepository<TKey, TTenant, TTenantUser, TMTPTenant> GetRepository()
+        private IDaTenantRepository<TKey, TTenant, TTenantUser, TMSPTenant, TMSPTenantMember> GetRepository()
         {
-            return GetRepository<IDaTenantRepository<TKey, TTenant, TTenantUser, TMTPTenant>>();
+            return GetRepository<IDaTenantRepository<TKey, TTenant, TTenantUser, TMSPTenant, TMSPTenantMember>>();
         }
 
         public Task CreateAsync(TTenant tenant)
@@ -68,11 +69,6 @@ namespace Ejyle.DevAccelerate.MultiTenancy.Tenants
             DaAsyncHelper.RunSync(() => UpdateAsync(tenant));
         }
 
-        public void UpdateMTPTenantStatus(TKey mtpTenantId, TKey tenantId, bool isActive)
-        {
-            DaAsyncHelper.RunSync(() => UpdateMTPTenantStatusAsync(mtpTenantId, tenantId, isActive));
-        }
-
         public TTenant FindById(TKey tenantId)
         {
             return DaAsyncHelper.RunSync(() => FindByIdAsync(tenantId));
@@ -97,12 +93,6 @@ namespace Ejyle.DevAccelerate.MultiTenancy.Tenants
             return GetRepository().UpdateAsync(tenant);
         }
 
-        public Task UpdateMTPTenantStatusAsync(TKey mtpTenantId, TKey tenantId, bool isActive)
-        {
-            ThrowIfDisposed();
-            return GetRepository().UpdateMTPTenantStatusAsync(mtpTenantId, tenantId, isActive);
-        }
-
         public Task<List<TTenant>> FindByUserIdAsync(TKey userId)
         {
             ThrowIfDisposed();
@@ -112,17 +102,6 @@ namespace Ejyle.DevAccelerate.MultiTenancy.Tenants
         public List<TTenant> FindByUserId(TKey userId)
         {
             return DaAsyncHelper.RunSync(() => FindByUserIdAsync(userId));
-        }
-
-        public Task<TMTPTenant> FindMTPTenantIdAsync(TKey tenantId)
-        {
-            ThrowIfDisposed();
-            return GetRepository().FindMTPTenantIdAsync(tenantId);
-        }
-
-        public TMTPTenant FindMTPTenantId(TKey tenantId)
-        {
-            return DaAsyncHelper.RunSync(() => FindMTPTenantIdAsync(tenantId));
         }
 
         public IQueryable<TTenant> Tenants

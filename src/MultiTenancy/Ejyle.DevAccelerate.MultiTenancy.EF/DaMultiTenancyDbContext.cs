@@ -10,12 +10,11 @@ using Microsoft.EntityFrameworkCore;
 using Ejyle.DevAccelerate.MultiTenancy.Tenants;
 using Ejyle.DevAccelerate.MultiTenancy.Addresses;
 using Ejyle.DevAccelerate.MultiTenancy.Organizations;
-using Ejyle.DevAccelerate.MultiTenancy.ApiManagement;
 using System.Xml;
 
 namespace Ejyle.DevAccelerate.MultiTenancy.EF
 {
-    public class DaMultiTenancyDbContext : DaMultiTenancyDbContext<string, DaTenant, DaTenantUser, DaTenantAttribute, DaMTPTenant, DaTenantDomain, DaApiKey, DaOrganization, DaOrganizationAttribute, DaOrganizationGroup, DaAddressProfile, DaUserAddress>
+    public class DaMultiTenancyDbContext : DaMultiTenancyDbContext<string, DaTenant, DaTenantUser, DaTenantAttribute, DaMSPTenant, DaMSPTenantMember, DaTenantDomain, DaOrganization, DaOrganizationAttribute, DaOrganizationGroup, DaAddressProfile, DaUserAddress>
     {
         public DaMultiTenancyDbContext()
             : base()
@@ -30,14 +29,14 @@ namespace Ejyle.DevAccelerate.MultiTenancy.EF
         { }
     }
 
-    public class DaMultiTenancyDbContext<TKey, TTenant, TTenantUser, TTenantAttribute, TMTPTenant, TTenantDomain, TApiKey, TOrganization, TOrganizationAttribute, TOrganizationGroup, TAddressProfile, TUserAddress> : DbContext
+    public class DaMultiTenancyDbContext<TKey, TTenant, TTenantUser, TTenantAttribute, TMSPTenant, TMSPTenantMember, TTenantDomain, TOrganization, TOrganizationAttribute, TOrganizationGroup, TAddressProfile, TUserAddress> : DbContext
         where TKey : IEquatable<TKey>
-        where TTenant : DaTenant<TKey, TTenantUser, TTenantAttribute, TMTPTenant, TTenantDomain>
+        where TTenant : DaTenant<TKey, TTenantUser, TTenantAttribute, TMSPTenant, TMSPTenantMember, TTenantDomain>
         where TTenantAttribute : DaTenantAttribute<TKey, TTenant>
         where TTenantUser : DaTenantUser<TKey, TTenant>
-        where TMTPTenant : DaMTPTenant<TKey, TTenant>
+        where TMSPTenant : DaMSPTenant<TKey, TTenant, TMSPTenantMember>
+        where TMSPTenantMember : DaMSPTenantMember<TKey, TTenant, TMSPTenant>
         where TTenantDomain : DaTenantDomain<TKey, TTenant>
-        where TApiKey : DaApiKey<TKey>
         where TOrganization : DaOrganization<TKey, TOrganization, TOrganizationAttribute, TOrganizationGroup>
         where TOrganizationGroup : DaOrganizationGroup<TKey, TOrganizationGroup, TOrganization>
         where TOrganizationAttribute : DaOrganizationAttribute<TKey, TOrganization>
@@ -54,7 +53,7 @@ namespace Ejyle.DevAccelerate.MultiTenancy.EF
             : base(options)
         { }
 
-        public DaMultiTenancyDbContext(DbContextOptions<DaMultiTenancyDbContext<TKey, TTenant, TTenantUser, TTenantAttribute, TMTPTenant, TTenantDomain, TApiKey, TOrganization, TOrganizationAttribute, TOrganizationGroup, TAddressProfile, TUserAddress>> options)
+        public DaMultiTenancyDbContext(DbContextOptions<DaMultiTenancyDbContext<TKey, TTenant, TTenantUser, TTenantAttribute, TMSPTenant, TMSPTenantMember, TTenantDomain, TOrganization, TOrganizationAttribute, TOrganizationGroup, TAddressProfile, TUserAddress>> options)
             : base(options)
         { }
 
@@ -62,15 +61,15 @@ namespace Ejyle.DevAccelerate.MultiTenancy.EF
             : base(GetOptions(connectionString))
         { }
 
-        private static DbContextOptions<DaMultiTenancyDbContext<TKey, TTenant, TTenantUser, TTenantAttribute, TMTPTenant, TTenantDomain, TApiKey, TOrganization, TOrganizationAttribute, TOrganizationGroup, TAddressProfile, TUserAddress>> GetOptions(string connectionString)
+        private static DbContextOptions<DaMultiTenancyDbContext<TKey, TTenant, TTenantUser, TTenantAttribute, TMSPTenant, TMSPTenantMember, TTenantDomain, TOrganization, TOrganizationAttribute, TOrganizationGroup, TAddressProfile, TUserAddress>> GetOptions(string connectionString)
         {
-            return SqlServerDbContextOptionsExtensions.UseSqlServer(new DbContextOptionsBuilder<DaMultiTenancyDbContext<TKey, TTenant, TTenantUser, TTenantAttribute, TMTPTenant, TTenantDomain, TApiKey, TOrganization, TOrganizationAttribute, TOrganizationGroup, TAddressProfile, TUserAddress>>(), connectionString).Options;
+            return SqlServerDbContextOptionsExtensions.UseSqlServer(new DbContextOptionsBuilder<DaMultiTenancyDbContext<TKey, TTenant, TTenantUser, TTenantAttribute, TMSPTenant, TMSPTenantMember, TTenantDomain, TOrganization, TOrganizationAttribute, TOrganizationGroup, TAddressProfile, TUserAddress>>(), connectionString).Options;
         }
 
         public virtual DbSet<TTenant> Tenants { get; set; }
         public virtual DbSet<TTenantUser> TenantUsers { get; set; }
         public virtual DbSet<TTenantAttribute> TenantAttributes { get; set; }
-        public virtual DbSet<TMTPTenant> MTPTenants { get; set; }
+        public virtual DbSet<TMSPTenant> MTPTenants { get; set; }
         public virtual DbSet<TOrganization> Organizations { get; set; }
         public virtual DbSet<TOrganizationAttribute> OrganizationAttributes { get; set; }
         public virtual DbSet<TOrganizationGroup> OrganizationGroups { get; set; }
@@ -119,37 +118,62 @@ namespace Ejyle.DevAccelerate.MultiTenancy.EF
                     .HasForeignKey(d => d.TenantId);
             });
 
-            modelBuilder.Entity<TMTPTenant>(entity =>
+            modelBuilder.Entity<TMSPTenant>(entity =>
             {
-                entity.ToTable("MTPTenants", SCHEMA_NAME);
+                entity.ToTable("MSPTenants", SCHEMA_NAME);
 
                 entity.Property(e => e.Id).ValueGeneratedOnAdd();
-                entity.Property(e => e.MTPManagedTenantId).IsRequired();
-                entity.Property(e => e.MTPTenantId).IsRequired();
+                entity.Property(e => e.TenantId).IsRequired();
 
-                entity.Property(e => e.MTPNumber)
+                entity.Property(e => e.MSPNumber)
                     .IsRequired() 
                     .ValueGeneratedOnAdd()
                     .UseIdentityColumn();
 
-                entity.HasIndex(e => e.MTPNumber).IsUnique();
+                entity.HasIndex(e => e.MSPNumber).IsUnique();
 
                 entity.Property(e => e.CreatedBy).HasMaxLength(450).IsRequired();
                 entity.Property(e => e.CreatedDateUtc).HasColumnType("datetime");
                 entity.Property(e => e.LastUpdatedBy).HasMaxLength(450).IsRequired();
                 entity.Property(e => e.LastUpdatedDateUtc).HasColumnType("datetime");
 
-                entity.HasOne(d => d.MTPManagedTenant)
-                    .WithMany(p => p.MTPManagedTenants)
-                    .HasForeignKey(d => d.MTPManagedTenantId)
+                entity.HasOne(d => d.Tenant)
+                    .WithMany(p => p.MSPTenants)
+                    .HasForeignKey(d => d.TenantId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_MTPTenants_MTPManagedTenants");
+                    .HasConstraintName("FK_MSPTenants_Tenants");
+            });
 
-                entity.HasOne(d => d.MTPTenant)
-                    .WithMany(p => p.MTPTenants)
-                    .HasForeignKey(d => d.MTPTenantId)
+            modelBuilder.Entity<TMSPTenantMember>(entity =>
+            {
+                entity.ToTable("MSPTenantMembers", SCHEMA_NAME);
+
+                entity.Property(e => e.Id).ValueGeneratedOnAdd();
+                entity.Property(e => e.TenantId).IsRequired();
+
+                entity.Property(e => e.MSPMemberNumber)
+                    .IsRequired()
+                    .ValueGeneratedOnAdd()
+                    .UseIdentityColumn();
+
+                entity.HasIndex(e => e.MSPMemberNumber).IsUnique();
+
+                entity.Property(e => e.CreatedBy).HasMaxLength(450).IsRequired();
+                entity.Property(e => e.CreatedDateUtc).HasColumnType("datetime");
+                entity.Property(e => e.LastUpdatedBy).HasMaxLength(450).IsRequired();
+                entity.Property(e => e.LastUpdatedDateUtc).HasColumnType("datetime");
+
+                entity.HasOne(d => d.Tenant)
+                    .WithMany(p => p.MSPTenantMembers)
+                    .HasForeignKey(d => d.TenantId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_MTPTenants_MTPTenants");
+                    .HasConstraintName("FK_MSPTenantMembers_Tenants");
+
+                entity.HasOne(d => d.MSPTenant)
+                    .WithMany(p => p.Members)
+                    .HasForeignKey(d => d.MSPTenantId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_MSPTenantMembers_MSPTenants");
             });
 
             modelBuilder.Entity<TTenant>(entity =>
@@ -227,22 +251,6 @@ namespace Ejyle.DevAccelerate.MultiTenancy.EF
                 entity.Property(e => e.CreatedDateUtc).HasColumnType("datetime");
                 entity.Property(e => e.LastUpdatedBy).HasMaxLength(450).IsRequired();
                 entity.Property(e => e.LastUpdatedDateUtc).HasColumnType("datetime");
-            });
-
-            modelBuilder.Entity<TApiKey>(entity =>
-            {
-                entity.ToTable("ApiKeys", SCHEMA_NAME);
-
-                entity.Property(e => e.Id).ValueGeneratedOnAdd();
-                entity.Property(e => e.Salt).HasMaxLength(128).IsRequired();
-                entity.Property(e => e.SecretKey).HasMaxLength(1000).IsRequired();
-                entity.Property(e => e.ApiKey).HasMaxLength(128).IsRequired();
-
-                entity.HasIndex(e => e.ApiKey).IsUnique();
-
-                entity.Property(e => e.TenantId).IsRequired();
-
-                entity.Property(e => e.CreatedDateUtc).HasColumnType("datetime");
             });
 
             modelBuilder.Entity<TOrganizationAttribute>(entity =>

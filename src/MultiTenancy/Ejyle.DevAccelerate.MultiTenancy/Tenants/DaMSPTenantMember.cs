@@ -8,13 +8,23 @@
 using Ejyle.DevAccelerate.Core;
 using System;
 
-namespace Ejyle.DevAccelerate.Social
+namespace Ejyle.DevAccelerate.MultiTenancy.Tenants
 {
-    public interface IDaPostMention<TKey> : IDaEntity<TKey>
-        where TKey : IEquatable<TKey>
+    public class DaMSPTenantMember : DaMSPTenantMember<string, DaTenant, DaMSPTenant>
     {
-        TKey PostId { get; set; }
-        string Mention { get; set; }
-        DaPostMediaType MentionType { get; set; }
+        public DaMSPTenantMember() : base()
+        { }
+    }
+
+    public class DaMSPTenantMember<TKey, TTenant, TMSPTenant> : DaAuditedEntityBase<TKey>, IDaMSPTenantMember<TKey>
+        where TKey : IEquatable<TKey>
+        where TTenant : IDaTenant<TKey>
+    {
+        public TKey MSPTenantId { get; set; }
+        public TKey TenantId { get; set; }
+        public int MSPMemberNumber { get; set; }
+        public bool IsActive { get; set; }
+        public virtual TMSPTenant MSPTenant { get; set; }
+        public virtual TTenant Tenant { get; set; }
     }
 }
