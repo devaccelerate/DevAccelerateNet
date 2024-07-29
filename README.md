@@ -3,6 +3,13 @@
 
 **DevAccelerate for .NET** is a comprehensive and well-designed development accelerator for Microsoft .NET Framework. It is free and open source. It contains common components and functionalities that allow developers to build real-world .NET apps rapidly. It is broken up into individual modules and therefore allows developers to use only what is needed. The usage of the framework is governed by the terms and conditions of its [License](https://github.com/devaccelerate/DevAccelerateNet/blob/master/LICENSE).
 
+## 8.0.0 Preview Changes
+DevAccelerate for .NET 8.0 adds support for .NET 8 and the primary objective of this release is to simplify the overall framework. The following are the highlights:
+* Added support for .NET 8.
+* Removed Facades, Social, and Tools from the solution to simplify the overall framework and remove the .
+* Renamed MTP (Managed Tenant Provider) as MSP (Managed Service Provider) in the Multi-Tenancy libraries.
+* Added DaMSPTenant and MSPTenantMember classes to manage MSP tenants and their members in a simplified entity model.
+
 ## 7.0.1 Preview Changes
 DevAccelerate for .NET 7.0 is a major release and has new many new APIs and some of the older APIs have been removed. The following are the highlights:
 * Added object types, object instances, object history and object dependencies to the core module.
@@ -67,16 +74,12 @@ The following is the list of DevAccelerate modules with corresponding NuGet pack
 * [DevAccelerateSms](https://www.nuget.org/packages/DevAccelerateSms/)
 * [DevAccelerateSmsTextlocal](https://www.nuget.org/packages/DevAccelerateSmsTextlocal/)
 * [DevAccelerateSmsTwilio](https://www.nuget.org/packages/DevAccelerateSmsTwilio/)
-#### Facades
-* [DevAccelerateSecurityFacade](https://www.nuget.org/packages/DevAccelerateSecurityFacade/)
 #### System Tasks
 * [DevAccelerateSystemTasks](https://www.nuget.org/packages/DevAccelerateSystemTasks/)
 * [DevAccelerateSystemTasksEF](https://www.nuget.org/packages/DevAccelerateSystemTasksEF/)
 #### Tasks
 * [DevAccelerateTasks](https://www.nuget.org/packages/DevAccelerateTasks)
 * [DevAccelerateTasksEF](https://www.nuget.org/packages/DevAccelerateTasksEF)
-#### Tools
-* [DevAccelerateTools](https://www.nuget.org/packages/DevAccelerateTools/)
 
 ## Getting Started
 ### Installation
@@ -95,18 +98,11 @@ dotnet add package DevAccelerateNotificationsEF
 dotnet add package DevAccelerateMailSendGrid
 dotnet add package DevAccelerateSmsTextlocal
 dotnet add package DevAccelerateSmsTwilio
-dotnet add package DevAccelerateFacades
 ```
 To install all the DevAccelerate modules (libraries) in one go, the DevAccelerateAll metapackage can be quite handy:
 ```
 dotnet add package DevAccelerateAll
 ```
-Use ```dotnet tool install``` command to install DevAccelerateTools:
-```
-dotnet tool install -g DevAccelerateTools
-```
-**Note:** Use the ```--version``` option to specify a specific version to install.
-
 ## Issues
 
 If you find a bug in the library or you have an idea about a new feature, please try to search in the existing list of [issues](https://github.com/devaccelerate/DevAccelerateNet/issues). If the bug or idea is not listed and addressed there, please [open a new issue](https://github.com/devaccelerate/DevAccelerateNet/issues/new).
