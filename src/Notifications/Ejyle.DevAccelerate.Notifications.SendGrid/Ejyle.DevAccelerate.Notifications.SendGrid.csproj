@@ -2,7 +2,7 @@
 	<PropertyGroup>
 		<VersionPrefix>8.0.0</VersionPrefix>
 		<VersionSuffix>preview1.0</VersionSuffix>
-		<TargetFrameworks>net7.0;net6.0;net5.0;netcoreapp3.1</TargetFrameworks>
+		<TargetFrameworks>netcoreapp3.1;net5.0;net6.0;net7.0;net8.0</TargetFrameworks>
 		<PlatformTarget>anycpu</PlatformTarget>
 		<GenerateDocumentationFile>false</GenerateDocumentationFile>
 		<OutputType>Library</OutputType>
