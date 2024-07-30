@@ -41,6 +41,7 @@ namespace Ejyle.DevAccelerate.MultiTenancy.Tenants
         Task CreateMSPTenantAsync(TMSPTenant mspTenant);
         Task UpdateMSPTenantAsync(TMSPTenant mspTenant);
         Task<TMSPTenant> FindMSPTenantByIdAsync(TKey mspTenatId);
+        Task<TMSPTenant> FindMSPTenantByTenantIdAsync(TKey tenantId);
         Task CreateMSPTenantMemberAsync(TMSPTenantMember mspMember);
         Task UpdateMSPTenantMemberAsync(TMSPTenantMember mspMember);
         Task<TMSPTenantMember> FindMSPTenantMemberByIdAsync(TKey mspTenatMemberId);

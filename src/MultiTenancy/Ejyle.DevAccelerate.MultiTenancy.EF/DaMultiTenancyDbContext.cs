@@ -132,6 +132,8 @@ namespace Ejyle.DevAccelerate.MultiTenancy.EF
 
                 entity.HasIndex(e => e.MSPNumber).IsUnique();
 
+                entity.HasIndex(e => e.TenantId).IsUnique();
+
                 entity.Property(e => e.CreatedBy).HasMaxLength(450).IsRequired();
                 entity.Property(e => e.CreatedDateUtc).HasColumnType("datetime");
                 entity.Property(e => e.LastUpdatedBy).HasMaxLength(450).IsRequired();
@@ -157,6 +159,8 @@ namespace Ejyle.DevAccelerate.MultiTenancy.EF
                     .UseIdentityColumn();
 
                 entity.HasIndex(e => e.MSPMemberNumber).IsUnique();
+
+                entity.HasIndex(e => new { e.TenantId, e.MSPTenantId }).IsUnique();
 
                 entity.Property(e => e.CreatedBy).HasMaxLength(450).IsRequired();
                 entity.Property(e => e.CreatedDateUtc).HasColumnType("datetime");
@@ -193,8 +197,7 @@ namespace Ejyle.DevAccelerate.MultiTenancy.EF
                     .IsRequired()
                     .HasMaxLength(256);
 
-                entity.HasIndex(e => e.Name)
-                    .IsUnique();
+                entity.HasIndex(e => e.Name).IsUnique();
 
                 entity.Property(e => e.Country).HasMaxLength(450);
                 entity.Property(e => e.Currency).HasMaxLength(450);
@@ -222,8 +225,7 @@ namespace Ejyle.DevAccelerate.MultiTenancy.EF
                 entity.Property(e => e.VerificationFileName)
                     .HasMaxLength(256);
 
-                entity.HasIndex(e => e.Domain)
-                    .IsUnique();
+                entity.HasIndex(e => e.Domain).IsUnique();
 
                 entity.Property(e => e.VerificationCodeCreatedDateUtc).HasColumnType("datetime");
                 entity.Property(e => e.VerificationCodeExpiryDateUtc).HasColumnType("datetime");

@@ -159,6 +159,11 @@ namespace Ejyle.DevAccelerate.MultiTenancy.EF.Tenants
             return MSPTenantsSet.Where(m => m.Id.Equals(mspTenatId)).SingleOrDefaultAsync();
         }
 
+        public Task<TMSPTenant> FindMSPTenantByTenantIdAsync(TKey tenantId)
+        {
+            return MSPTenantsSet.Where(m => m.TenantId.Equals(tenantId)).SingleOrDefaultAsync();    
+        }
+
         public async Task CreateMSPTenantMemberAsync(TMSPTenantMember mspMember)
         {
             MSPTenantMembersSet.Add(mspMember);
