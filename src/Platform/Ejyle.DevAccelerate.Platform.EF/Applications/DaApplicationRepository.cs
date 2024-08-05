@@ -15,18 +15,18 @@ using Ejyle.DevAccelerate.Core.Data;
 using Ejyle.DevAccelerate.Platform.Features;
 using Ejyle.DevAccelerate.Platform.Applications;
 
-namespace Ejyle.DevAccelerate.Platform.EF.Features
+namespace Ejyle.DevAccelerate.Platform.EF.Applications
 {
-    public class DaFeatureRepository : DaFeatureRepository<string, DaFeature, DaFeatureAction, DaApplication, DaApplicationAttribute, DbContext>
+    public class DaAppRepository : DaApplicationRepository<string, DaApplication, DaApplicationAttribute, DaFeature, DaFeatureAction, DbContext>
     {
-        public DaFeatureRepository(DbContext dbContext)
+        public DaAppRepository(DbContext dbContext)
             : base(dbContext)
         { }
     }
 
 
-    public class DaFeatureRepository<TKey, TFeature, TFeatureAction, TApplication, TAppAttribute, TDbContext>
-        : DaEntityRepositoryBase<TKey, TApplication, TDbContext>, IDaFeatureRepository<TKey, TFeature>
+    public class DaApplicationRepository<TKey, TApplication, TAppAttribute, TFeature, TFeatureAction, TDbContext>
+        : DaEntityRepositoryBase<TKey, TApplication, TDbContext>, IDaApplicationRepository<TKey, TApplication>
         where TKey : IEquatable<TKey>
         where TApplication : DaApplication<TKey, TAppAttribute, TFeature>
         where TAppAttribute : DaApplicationAttribute<TKey, TApplication>
@@ -34,69 +34,65 @@ namespace Ejyle.DevAccelerate.Platform.EF.Features
         where TFeature : DaFeature<TKey, TApplication, TFeatureAction>
         where TDbContext : DbContext
     {
-        public DaFeatureRepository(TDbContext dbContext)
+        public DaApplicationRepository(TDbContext dbContext)
             : base(dbContext)
         { }
 
-        private DbSet<TFeature> Features { get { return DbContext.Set<TFeature>(); } }
+        private DbSet<TApplication> Applications { get { return DbContext.Set<TApplication>(); } }
 
-        public Task CreateAsync(TFeature feature)
+        public Task CreateAsync(TApplication application)
         {
-            Features.Add(feature);
+            Applications.Add(application);
             return SaveChangesAsync();
         }
 
-        public Task DeleteAsync(TFeature feature)
+        public Task DeleteAsync(TApplication app)
         {
-            Features.Remove(feature);
+            Applications.Remove(app);
             return SaveChangesAsync();
         }
 
-        public Task<List<TFeature>> FindByApplicationIdAsync(TKey applicationId)
+        public Task<TApplication> FindByIdAsync(TKey id)
         {
-            return Features.Where(m => m.ApplicationId.Equals(applicationId))
-                .Include(m => m.FeatureActions)
-                .ToListAsync();
-        }
-
-        public Task<TFeature> FindByIdAsync(TKey id)
-        {
-            return Features.Where(m => m.Id.Equals(id))
-                .Include(m => m.FeatureActions)
+            return Applications.Where(m => m.Id.Equals(id))
+                .Include(m => m.Attributes)
+                .Include(m => m.Features)
                 .SingleOrDefaultAsync();
         }
 
-        public Task<TFeature> FindByKeyAsync(TKey applicationId, string key)
+        public Task<TApplication> FindByKeyAsync(string key)
         {
-            return Features.Where(m => m.ApplicationId.Equals(applicationId) && m.Key == key)
-                .Include(m => m.FeatureActions)
+            return Applications.Where(m => m.Key == key)
+                .Include(m => m.Attributes)
+                .Include(m => m.Features)
                 .SingleOrDefaultAsync();
         }
 
-        public Task UpdateAsync(TFeature feature)
+        public Task UpdateAsync(TApplication app)
         {
-            DbContext.Entry(feature).State = EntityState.Modified;
+            DbContext.Entry(app).State = EntityState.Modified;
             return SaveChangesAsync();
         }
 
-        public async Task<DaPaginatedEntityList<TKey, TFeature>> FindAllAsync(DaDataPaginationCriteria paginationCriteria)
+        public async Task<DaPaginatedEntityList<TKey, TApplication>> FindAllAsync(DaDataPaginationCriteria paginationCriteria)
         {
-            var totalCount = await Features.CountAsync();
+            var totalCount = await Applications.CountAsync();
 
             if (totalCount <= 0)
             {
                 return null;
             }
 
-            var query = Features
+            var query = Applications
                 .Skip((paginationCriteria.PageIndex - 1) * paginationCriteria.PageSize)
                 .Take(paginationCriteria.PageSize)
-                .Include(m => m.FeatureActions)
+                .Include(m => m.Attributes)
+                .Include(m => m.Features)
                 .AsQueryable();
 
             var result = await query.ToListAsync();
 
-            return new DaPaginatedEntityList<TKey, TFeature>(result
+            return new DaPaginatedEntityList<TKey, TApplication>(result
                 , new DaDataPaginationResult(paginationCriteria, totalCount));
         }
     }

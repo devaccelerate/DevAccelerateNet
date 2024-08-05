@@ -36,7 +36,7 @@ namespace Ejyle.DevAccelerate.Platform.Features
             ThrowIfDisposed();
             ThrowIfArgumentIsNull(feature, nameof(feature));
 
-            feature.Key = await CreateValidFeatureKeyAsync(feature);
+            feature.Key = await AssignValidFeatureKeyAsync(feature);
             await Repository.CreateAsync(feature);
         }
 
@@ -82,23 +82,16 @@ namespace Ejyle.DevAccelerate.Platform.Features
             return Repository.FindByIdAsync(id);
         }
 
-        public virtual TFeature FindByName(string name)
-        {
-            return DaAsyncHelper.RunSync(() => FindByKeyAsync(name));
-        }
-
-        public virtual Task<TFeature> FindByKeyAsync(string key)
+        public Task<List<TFeature>> FindByApplicationIdAsync(TKey applicationId)
         {
             ThrowIfDisposed();
-            ThrowIfArgumentIsNull(key, nameof(key));
-
-            return Repository.FindByKeyAsync(key);
+            return Repository.FindByApplicationIdAsync(applicationId);
         }
 
-        public Task<List<TFeature>> FindByAppIdAsync(TKey appId)
+        public Task<TFeature> FindByKeyAsync(TKey applicationId, string key)
         {
             ThrowIfDisposed();
-            return Repository.FindByAppIdAsync(appId);
+            return Repository.FindByKeyAsync(applicationId, key);
         }
 
         public virtual Task<DaPaginatedEntityList<TKey, TFeature>> FindAllAsync(DaDataPaginationCriteria paginationCriteria)
@@ -114,27 +107,32 @@ namespace Ejyle.DevAccelerate.Platform.Features
 
         public virtual string CreateValidFeatureKey(TFeature feature)
         {
-            return DaAsyncHelper.RunSync(() => CreateValidFeatureKeyAsync(feature));
+            return DaAsyncHelper.RunSync(() => AssignValidFeatureKeyAsync(feature));
         }
 
-        public virtual async Task<string> CreateValidFeatureKeyAsync(TFeature feature)
+        public virtual async Task<string> AssignValidFeatureKeyAsync(TFeature feature)
         {
-            var featureName = feature.Name.Replace(" ", "-");
-            featureName = featureName.ToLower();
+            var key = feature.Key;
 
-            var duplicateFeatureName = await IsFeatureKeyExistsAsync(featureName);
+            if (string.IsNullOrEmpty(key))
+            {
+                key = feature.Name.Replace(" ", "-");
+                key = key.ToLower();
+            }
+
+            var duplicateFeatureName = await IsFeatureKeyExistsAsync(feature.ApplicationId, key);
 
             if (duplicateFeatureName)
             {
-                featureName = featureName + "-" + DaRandomNumberUtil.GenerateInt();
+                key = key + "-" + DaRandomNumberUtil.GenerateInt();
             }
 
-            return featureName;
+            return key;
         }
 
-        private async Task<bool> IsFeatureKeyExistsAsync(string appName)
+        private async Task<bool> IsFeatureKeyExistsAsync(TKey applicationId, string key)
         {
-            var app = await FindByKeyAsync(appName);
+            var app = await FindByKeyAsync(applicationId, key);
             return app != null;
         }
     }

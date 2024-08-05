@@ -5,16 +5,17 @@
 // Licensed under the MIT license. See the LICENSE file in the project's root directory for complete license information.
 // ----------------------------------------------------------------------------------------------------------------------
 
-using System;
 using Ejyle.DevAccelerate.Core;
+using System;
 
-namespace Ejyle.DevAccelerate.Platform.Apps
+namespace Ejyle.DevAccelerate.Platform.Applications
 {
-    public interface IDaAppAttribute<TKey> : IDaEntity<TKey>
+    public interface IDaApplication<TKey> : IDaEntity<TKey>
         where TKey : IEquatable<TKey>
     {
-        TKey AppId { get; set; }
-        string AttributeName { get; set; }
-        string AttributeValue { get; set; }
+        string Name { get; set; }
+        string Key { get; set; }
+        string Description { get; set; }
+        bool IsActive { get; set; }
     }
 }

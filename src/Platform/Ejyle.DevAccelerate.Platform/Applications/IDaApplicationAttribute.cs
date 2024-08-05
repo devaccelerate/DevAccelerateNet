@@ -6,15 +6,15 @@
 // ----------------------------------------------------------------------------------------------------------------------
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Ejyle.DevAccelerate.Core;
 
-namespace Ejyle.DevAccelerate.Platform.Apps
+namespace Ejyle.DevAccelerate.Platform.Applications
 {
-    public class DaAppSettings
+    public interface IDaApplicationAttribute<TKey> : IDaEntity<TKey>
+        where TKey : IEquatable<TKey>
     {
-        public string AppKey { get; set; }
+        TKey ApplicationId { get; set; }
+        string AttributeName { get; set; }
+        string AttributeValue { get; set; }
     }
 }

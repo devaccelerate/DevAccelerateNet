@@ -5,19 +5,23 @@
 // Licensed under the MIT license. See the LICENSE file in the project's root directory for complete license information.
 // ----------------------------------------------------------------------------------------------------------------------
 
-using Ejyle.DevAccelerate.Platform.Apps;
-using Microsoft.Extensions.Options;
+using System;
+using Ejyle.DevAccelerate.Core;
 
-namespace Ejyle.DevAccelerate.Platform.EF.Apps
+namespace Ejyle.DevAccelerate.Platform.Applications
 {
-    public class DaAppManager : DaAppManager<string, DaApp>
+    public class DaApplicationAttribute : DaApplicationAttribute<string, DaApplication>
     {
-        public DaAppManager(IOptions<DaAppSettings> options, DaAppRepository repository)
-            : base(options, repository)
+        public DaApplicationAttribute() : base()
         { }
+    }
 
-        public DaAppManager(DaAppRepository repository)
-            : base(repository)
-        { }
+    public class DaApplicationAttribute<TKey, TApplication> : DaEntityBase<TKey>, IDaApplicationAttribute<TKey>
+        where TKey : IEquatable<TKey>
+    {
+        public TKey ApplicationId { get; set; }
+        public virtual TApplication Application { get; set; }
+        public string AttributeName { get; set; }
+        public string AttributeValue { get; set; }
     }
 }

@@ -19,9 +19,9 @@ namespace Ejyle.DevAccelerate.Platform.Features
     {
         Task CreateAsync(TFeature feature);
         Task<TFeature> FindByIdAsync(TKey id);
-        Task<TFeature> FindByKeyAsync(string key);
         Task<DaPaginatedEntityList<TKey, TFeature>> FindAllAsync(DaDataPaginationCriteria paginationCriteria);
-        Task<List<TFeature>> FindByAppIdAsync(TKey appId);
+        Task<List<TFeature>> FindByApplicationIdAsync(TKey applicationId);
+        Task<TFeature> FindByKeyAsync(TKey applicationId, string key);
         Task UpdateAsync(TFeature feature);
         Task DeleteAsync(TFeature feature);
     }

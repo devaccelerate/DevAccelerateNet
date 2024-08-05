@@ -10,24 +10,22 @@ using Ejyle.DevAccelerate.Core;
 using System;
 using System.Collections.Generic;
 
-namespace Ejyle.DevAccelerate.Platform.Apps
+namespace Ejyle.DevAccelerate.Platform.Applications
 {
-    public class DaApp : DaApp<string, DaAppAttribute, DaFeature, DaAppFeature>
+    public class DaApplication : DaApplication<string, DaApplicationAttribute, DaFeature>
     {
-        public DaApp() : base()
+        public DaApplication() : base()
         { }
     }
 
-    public class DaApp<TKey, TAppAttribute, TFeature, TAppFeature> : DaEntityBase<TKey>, IDaApp<TKey>
+    public class DaApplication<TKey, TApplicationAttribute, TFeature> : DaEntityBase<TKey>, IDaApplication<TKey>
         where TKey : IEquatable<TKey>
-        where TAppAttribute : IDaAppAttribute<TKey>
+        where TApplicationAttribute : IDaApplicationAttribute<TKey>
         where TFeature : IDaFeature<TKey>
-        where TAppFeature : IDaAppFeature<TKey>
     {
-        public DaApp()
+        public DaApplication()
         {
-            Attributes = new HashSet<TAppAttribute>();
-            AppFeatures = new HashSet<TAppFeature>();
+            Attributes = new HashSet<TApplicationAttribute>();
             Features = new HashSet<TFeature>();
         }
 
@@ -37,11 +35,9 @@ namespace Ejyle.DevAccelerate.Platform.Apps
 
         public string Description { get; set; }
 
-        public DaAppStatus Status { get; set; }
+        public bool IsActive { get; set; }
 
-        public virtual ICollection<TAppAttribute> Attributes { get; set; }
-
-        public virtual ICollection<TAppFeature> AppFeatures { get; set; }
+        public virtual ICollection<TApplicationAttribute> Attributes { get; set; }
 
         public virtual ICollection<TFeature> Features { get; set; }
     }

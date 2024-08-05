@@ -6,13 +6,13 @@
 // ----------------------------------------------------------------------------------------------------------------------
 
 using System;
-using Ejyle.DevAccelerate.Platform.Apps;
+using Ejyle.DevAccelerate.Platform.Applications;
 using Ejyle.DevAccelerate.Platform.Features;
 using Microsoft.EntityFrameworkCore;
 
 namespace Ejyle.DevAccelerate.Platform.EF
 {
-    public class DaPlatformDbContext : DaPlatformDbContext<string, DaApp, DaAppAttribute, DaFeature, DaAppFeature, DaFeatureAction>
+    public class DaPlatformDbContext : DaPlatformDbContext<string, DaApplication, DaApplicationAttribute, DaFeature, DaFeatureAction>
     {
         public DaPlatformDbContext()
             : base()
@@ -27,13 +27,12 @@ namespace Ejyle.DevAccelerate.Platform.EF
         { }
     }
 
-    public class DaPlatformDbContext<TKey, TApp, TAppAttribute, TFeature, TAppFeature, TFeatureAction> : DbContext
+    public class DaPlatformDbContext<TKey, TApplication, TAppAttribute, TFeature, TFeatureAction> : DbContext
         where TKey : IEquatable<TKey>
-        where TApp : DaApp<TKey, TAppAttribute, TFeature, TAppFeature>
-        where TAppAttribute : DaAppAttribute<TKey, TApp>
-        where TAppFeature : DaAppFeature<TKey, TApp, TFeature>
+        where TApplication : DaApplication<TKey, TAppAttribute, TFeature>
+        where TAppAttribute : DaApplicationAttribute<TKey, TApplication>
         where TFeatureAction : DaFeatureAction<TKey, TFeature>
-        where TFeature : DaFeature<TKey, TApp, TAppFeature, TFeatureAction>
+        where TFeature : DaFeature<TKey, TApplication, TFeatureAction>
     {
         private const string SCHEMA_NAME = "Da.Platform";
 
@@ -45,7 +44,7 @@ namespace Ejyle.DevAccelerate.Platform.EF
             : base(options)
         { }
 
-        public DaPlatformDbContext(DbContextOptions<DaPlatformDbContext<TKey, TApp, TAppAttribute, TFeature, TAppFeature, TFeatureAction>> options)
+        public DaPlatformDbContext(DbContextOptions<DaPlatformDbContext<TKey, TApplication, TAppAttribute, TFeature, TFeatureAction>> options)
             : base(options)
         { }
 
@@ -53,13 +52,12 @@ namespace Ejyle.DevAccelerate.Platform.EF
             : base(GetOptions(connectionString))
         { }
 
-        private static DbContextOptions<DaPlatformDbContext<TKey, TApp, TAppAttribute, TFeature, TAppFeature, TFeatureAction>> GetOptions(string connectionString)
+        private static DbContextOptions<DaPlatformDbContext<TKey, TApplication, TAppAttribute, TFeature, TFeatureAction>> GetOptions(string connectionString)
         {
-            return SqlServerDbContextOptionsExtensions.UseSqlServer(new DbContextOptionsBuilder<DaPlatformDbContext<TKey, TApp, TAppAttribute, TFeature, TAppFeature, TFeatureAction>>(), connectionString).Options;
+            return SqlServerDbContextOptionsExtensions.UseSqlServer(new DbContextOptionsBuilder<DaPlatformDbContext<TKey, TApplication, TAppAttribute, TFeature, TFeatureAction>>(), connectionString).Options;
         }
 
-        public virtual DbSet<TAppFeature> AppFeatures { get; set; }
-        public virtual DbSet<TApp> Apps { get; set; }
+        public virtual DbSet<TApplication> Applications { get; set; }
         public virtual DbSet<TAppAttribute> AppAttributes { get; set; }
         public virtual DbSet<TFeatureAction> FeatureActions { get; set; }
         public virtual DbSet<TFeature> Features { get; set; }
@@ -80,7 +78,7 @@ namespace Ejyle.DevAccelerate.Platform.EF
 
             modelBuilder.Entity<TAppAttribute>(entity =>
             {
-                entity.ToTable("AppAttributes", SCHEMA_NAME);
+                entity.ToTable("ApplicationAttributes", SCHEMA_NAME);
 
                 entity.Property(e => e.Id).ValueGeneratedOnAdd();
 
@@ -88,29 +86,14 @@ namespace Ejyle.DevAccelerate.Platform.EF
                     .IsRequired()
                     .HasMaxLength(256);
 
-                entity.HasOne(d => d.App)
+                entity.HasOne(d => d.Application)
                     .WithMany(p => p.Attributes)
-                    .HasForeignKey(d => d.AppId);
+                    .HasForeignKey(d => d.ApplicationId);
             });
 
-            modelBuilder.Entity<TAppFeature>(entity =>
+            modelBuilder.Entity<TApplication>(entity =>
             {
-                entity.ToTable("AppFeatures", SCHEMA_NAME);
-
-                entity.Property(e => e.Id).ValueGeneratedOnAdd();
-
-                entity.HasOne(d => d.App)
-                    .WithMany(p => p.AppFeatures)
-                    .HasForeignKey(d => d.AppId);
-
-                entity.HasOne(d => d.Feature)
-                    .WithMany(p => p.AppFeatures)
-                    .HasForeignKey(d => d.FeatureId);
-            });
-
-            modelBuilder.Entity<TApp>(entity =>
-            {
-                entity.ToTable("Apps", SCHEMA_NAME);
+                entity.ToTable("Applications", SCHEMA_NAME);
 
                 entity.Property(e => e.Id).ValueGeneratedOnAdd();
 
@@ -155,9 +138,12 @@ namespace Ejyle.DevAccelerate.Platform.EF
                     .IsRequired()
                     .HasMaxLength(256);
 
-                entity.HasOne(d => d.App)
+                entity.HasIndex(e => new { e.ApplicationId, e.Key })
+                    .IsUnique();
+
+                entity.HasOne(d => d.Application)
                     .WithMany(p => p.Features)
-                    .HasForeignKey(d => d.AppId);
+                    .HasForeignKey(d => d.ApplicationId);
             });
         }
     }

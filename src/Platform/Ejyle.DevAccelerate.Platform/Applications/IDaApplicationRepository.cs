@@ -11,18 +11,17 @@ using System.Threading.Tasks;
 using Ejyle.DevAccelerate.Core;
 using Ejyle.DevAccelerate.Core.Data;
 
-namespace Ejyle.DevAccelerate.Platform.Apps
+namespace Ejyle.DevAccelerate.Platform.Applications
 {
-    public interface IDaAppRepository<TKey, TApp> : IDaEntityRepository<TKey, TApp>
+    public interface IDaApplicationRepository<TKey, TApplication> : IDaEntityRepository<TKey, TApplication>
         where TKey : IEquatable<TKey>
-        where TApp : IDaApp<TKey>
+        where TApplication : IDaApplication<TKey>
     {
-        Task CreateAsync(TApp app);
-        Task<TApp> FindByIdAsync(TKey id);
-        Task<TApp> FindByKeyAsync(string key);
-        Task<DaPaginatedEntityList<TKey, TApp>> FindAllAsync(DaDataPaginationCriteria paginationCriteria);
-        Task UpdateAsync(TApp app);
-        Task DeleteAsync(TApp app);
-        Task RemoveAppFeatureByIdAsync(TKey appFeatureId);
+        Task CreateAsync(TApplication application);
+        Task<TApplication> FindByIdAsync(TKey id);
+        Task<TApplication> FindByKeyAsync(string key);
+        Task<DaPaginatedEntityList<TKey, TApplication>> FindAllAsync(DaDataPaginationCriteria paginationCriteria);
+        Task UpdateAsync(TApplication application);
+        Task DeleteAsync(TApplication application);
     }
 }

@@ -13,9 +13,9 @@ namespace Ejyle.DevAccelerate.Platform.Features
     public interface IDaFeature<TKey> : IDaEntity<TKey>
         where TKey : IEquatable<TKey>
     {
-        TKey AppId { get; set; }
+        TKey ApplicationId { get; set; }
         string Name { get; set; }
         string Key { get; set; }
-        DaFeatureStatus Status { get; set; }
+        bool IsActive { get; set; }
     }
 }
